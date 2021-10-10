@@ -9,18 +9,21 @@ class ItemsInfo extends StatefulWidget {
 }
 
 class _ItemsInfoState extends State<ItemsInfo> {
-
-  void getData(){
-    Future.delayed(Duration(seconds: 3), () {
-      print("Vasil");
+  Future<bool> getData()  async {
+      Future<bool> name = await Future.delayed(Duration(seconds: 3), () {
+        return Future<bool>.value(true);
     });
+     return name;
   }
 
   @override
   void initState() {
     super.initState();
     print("init");
-    getData();
+    Future<bool> data = getData();
+    data.then((data) {
+      print(data);
+    });
   }
 
   @override
@@ -31,7 +34,7 @@ class _ItemsInfoState extends State<ItemsInfo> {
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
         backgroundColor: Colors.redAccent,
-        title: Text("Item: ${item.t1} Info"),
+        title: Text("${item.t1} Info"),
         centerTitle: true,
         elevation: 0,
       ),
@@ -39,10 +42,7 @@ class _ItemsInfoState extends State<ItemsInfo> {
         child: Column(
           children: [
             Row(children: [
-              Expanded(
-                  child: Image(
-                      image: NetworkImage(
-                          "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png")))
+              Expanded(child: Image(image: NetworkImage(item.image)))
             ]),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -97,4 +97,3 @@ class _ItemsInfoState extends State<ItemsInfo> {
     );
   }
 }
-
