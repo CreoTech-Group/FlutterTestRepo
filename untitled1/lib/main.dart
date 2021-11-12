@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
+import 'get_data.dart';
 import 'list_item.dart';
 import 'items.dart';
 import 'package:untitled1/items_info.dart';
-import 'package:http/http.dart';
-import 'dart:convert';
+import 'package:untitled1/di/injection_container.dart' as di;
 
-
-void main() => runApp(MaterialApp(
-  initialRoute: '/home',
-  routes: {
+void main() {
+  di.init();
+  runApp(MaterialApp(
+    initialRoute: '/home',
+    routes: {
       '/info': (context) => ItemsInfo(),
       '/home': (context) => Home(),
-  },
-));
+    },
+  ));
+}
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -24,31 +26,18 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   get onPressed => null;
 
-  List<Item> items = [
-
-  ];
-
-  void getData() async{
-
-    Response response = await get(Uri.parse('https://reqres.in/api/users'));
-    Map data = jsonDecode(response.body);
-    List items = data['data'];
-    setState(() {
-      items.forEach((element) {
-        this.items.add(Item(element['first_name'], element['last_name'], element['email'], element['avatar']));
-      });
-    });
-  }
+  List<Item> items = [];
 
   @override
   void initState() {
     super.initState();
-    getData();
+    setState(() {
+      getData().then((value) => {items.addAll(value)});
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
@@ -58,18 +47,16 @@ class _HomeState extends State<Home> {
       ),
       body: SafeArea(
         child: ListView.builder(
-          itemCount: items.length,
-          itemBuilder: (context, index){
-            return ListItem(
-                item: items[index],
-                delete: () {
-                  setState(() {
-                    items.removeAt(index);
+            itemCount: items.length,
+            itemBuilder: (context, index) {
+              return ListItem(
+                  item: items[index],
+                  delete: () {
+                    setState(() {
+                      items.removeAt(index);
+                    });
                   });
-                }
-            );
-          }
-        ),
+            }),
       ),
     );
   }
