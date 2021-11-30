@@ -1,35 +1,39 @@
-import 'package:rxdart/rxdart.dart';
-import 'package:untitled1/features/users/domain/exception/user_exception.dart';
 import 'package:untitled1/features/users/domain/model/user.dart';
-import 'package:untitled1/features/users/domain/usecase/get_users_usecase.dart';
 
-class UserViewModel {
-  final Subject<bool> _loadingSubject = BehaviorSubject();
-  Stream<bool> get loading => _loadingSubject;
+abstract class UserViewModel {}
 
-  final Subject<List<User>> _usersSubject = BehaviorSubject();
-  Stream<List<User>> get users => _usersSubject;
+class UserViewModelLoading extends UserViewModel {
 
-  final Subject<UserException> _errorSubject = BehaviorSubject();
-  Stream<UserException> get error => _errorSubject;
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is UserViewModelLoading && runtimeType == other.runtimeType;
 
-  final GetUsersUseCase _getUsersUseCase;
+  @override
+  int get hashCode => 0;
+}
 
-  UserViewModel(this._getUsersUseCase);
+class UserViewModelContent extends UserViewModel {
+  final List<User> users;
+  UserViewModelContent(this.users);
 
-  void getUsers() async {
-    _loadingSubject.add(true);
-    try {
-      final List<User> users = await _getUsersUseCase();
-      _usersSubject.add(users);
-    } on UserException catch(e) {
-      _errorSubject.add(e);
-    }
-  }
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is UserViewModelContent &&
+          runtimeType == other.runtimeType &&
+          users == other.users;
 
-  void dispose() {
-    _loadingSubject.close();
-    _usersSubject.close();
-    _errorSubject.close();
-  }
+  @override
+  int get hashCode => users.hashCode;
+}
+
+class UserViewModelError extends UserViewModel {
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is UserViewModelError && runtimeType == other.runtimeType;
+
+  @override
+  int get hashCode => 0;
 }

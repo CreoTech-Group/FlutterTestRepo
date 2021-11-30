@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:untitled1/features/users/domain/usecase/get_users_usecase.dart';
+import 'package:untitled1/features/users/presentation/user_presenter.dart';
+import 'package:untitled1/features/users/presentation/users_page.dart';
+import 'di/injection_container.dart';
 import 'get_data.dart';
 import 'list_item.dart';
 import 'items.dart';
@@ -11,53 +15,7 @@ void main() {
     initialRoute: '/home',
     routes: {
       '/info': (context) => ItemsInfo(),
-      '/home': (context) => Home(),
+      '/home': (context) => UsersPage(getIt()),
     },
   ));
-}
-
-class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
-
-  @override
-  State<Home> createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
-  get onPressed => null;
-
-  List<Item> items = [];
-
-  @override
-  void initState() {
-    super.initState();
-    setState(() {
-      getData().then((value) => {items.addAll(value)});
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey[200],
-      appBar: AppBar(
-        title: Text("Lists items"),
-        centerTitle: true,
-        backgroundColor: Colors.redAccent,
-      ),
-      body: SafeArea(
-        child: ListView.builder(
-            itemCount: items.length,
-            itemBuilder: (context, index) {
-              return ListItem(
-                  item: items[index],
-                  delete: () {
-                    setState(() {
-                      items.removeAt(index);
-                    });
-                  });
-            }),
-      ),
-    );
-  }
 }

@@ -5,7 +5,7 @@ import 'package:untitled1/core/network/api_provider_impl.dart';
 class CoreDependencyContainer {
   ApiProvider provideApi(http.Client client) {
     return ApiProviderImpl(
-        client, 'reqres.in/api');
+        client, 'https://reqres.in/api');
   }
 
   http.Client provideHttpClient() {

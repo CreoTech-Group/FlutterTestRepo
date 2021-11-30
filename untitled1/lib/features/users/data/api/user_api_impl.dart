@@ -10,8 +10,8 @@ class UserApiImpl implements UserApi {
 
   @override
   Future<List<UserResponse>> getUsers() async {
-    final Map<String, dynamic> usersJson = await _apiProvider.get('/users'); // { data: [ { first_name: ... } ] }
-    final UserListResponse usersResponse = UserListResponse.fromMap(usersJson); // [ { first_name: ... } ]
+    final Map<String, dynamic> usersJson = await _apiProvider.get('/users');
+    final UserListResponse usersResponse = UserListResponse.fromMap(usersJson);
     return usersResponse.results
         .map((userMap) => UserResponse.fromMap(userMap))
         .toList();

@@ -1,18 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'features/users/domain/model/user.dart';
 import 'items.dart';
 
 class ListItem extends StatelessWidget {
-  late Item item;
+  late User user;
   late VoidCallback delete;
 
-  ListItem({required this.item, required this.delete});
+  ListItem({required this.user, required this.delete});
 
   @override
   Widget build(BuildContext context) {
     return TextButton(
       onPressed: () {
-        Navigator.pushNamed(context, '/info', arguments: (item));
+        Navigator.pushNamed(context, '/info', arguments: (user));
       },
       child: Card(
         shape: RoundedRectangleBorder(
@@ -27,11 +28,11 @@ class ListItem extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(item.t1,
+                    Text(user.firstName,
                         style: TextStyle(fontSize: 20, color: Colors.cyan)),
-                    Text(item.t2,
+                    Text(user.lastName,
                         style: TextStyle(fontSize: 16, color: Colors.grey)),
-                    Text(item.t3,
+                    Text(user.email,
                         style: TextStyle(fontSize: 18, color: Colors.black)),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

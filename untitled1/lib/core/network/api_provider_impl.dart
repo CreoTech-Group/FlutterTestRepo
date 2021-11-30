@@ -15,8 +15,8 @@ class ApiProviderImpl implements ApiProvider {
   @override
   Future<dynamic> get(String url) async {
     try {
-      final response =
-          await _client.get(Uri.https(_baseUrl, url));
+      final uri = Uri.parse(_baseUrl + url);
+      final response = await _client.get(uri);
       return _parseResponse(response);
     } catch (e) {
       throw GenericNetworkException(e.toString());
