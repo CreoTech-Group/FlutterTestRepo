@@ -1,0 +1,5 @@
+{
+    "user_list": "Liste der Benutzer",
+    "user_list_error": "Fehler beim Laden der Benutzer... Bitte versuchen Sie es erneut",
+    "user_list_no_users": "Noch keine Benutzer"
+}

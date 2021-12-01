@@ -1,8 +1,10 @@
+import 'package:easy_localization/src/public_ext.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:untitled1/features/users/domain/model/user.dart';
 import 'package:untitled1/features/users/presentation/user_presenter.dart';
 import 'package:untitled1/features/users/presentation/user_viewmodel.dart';
+import 'package:untitled1/generated/locale_keys.g.dart';
 import 'package:untitled1/list_item.dart';
 
 class UsersPage extends StatefulWidget {
@@ -34,7 +36,7 @@ class _HomeState extends State<UsersPage> {
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
-        title: const Text("Lists items"),
+        title: const Text(LocaleKeys.user_list).tr(),
         centerTitle: true,
         backgroundColor: Colors.redAccent,
       ),
@@ -48,18 +50,25 @@ class _HomeState extends State<UsersPage> {
                 return const Center(child: CircularProgressIndicator());
               }
               if (state is UserViewModelError) {
-                return const Center(child: Text("Error loading users... Please try again"));
+                return Center(
+                    child: const Text(LocaleKeys.user_list_error).tr());
               }
               if (state is UserViewModelContent) {
                 final List<User> users = state.users;
-                return ListView.builder(
-                    itemCount: users.length,
-                    itemBuilder: (context, index) {
-                      return ListItem(user: users[index], delete: () {});
-                    });
+                if (users.isEmpty) {
+                  return Center(
+                      child: const Text(LocaleKeys.user_list_no_users).tr());
+                } else {
+                  return ListView.builder(
+                      itemCount: users.length,
+                      itemBuilder: (context, index) {
+                        return ListItem(user: users[index], delete: () {});
+                      });
+                }
               }
             }
-            return const Center(child: Text("No users yet"));
+            return Center(
+                child: const Text(LocaleKeys.user_list_no_users).tr());
           },
         ),
       ),
