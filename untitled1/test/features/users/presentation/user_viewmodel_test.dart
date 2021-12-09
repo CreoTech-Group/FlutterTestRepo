@@ -4,6 +4,7 @@ import 'package:untitled1/features/users/domain/exception/user_exception.dart';
 import 'package:untitled1/features/users/domain/model/user.dart';
 import 'package:untitled1/features/users/domain/usecase/get_users_usecase.dart';
 import 'package:untitled1/features/users/presentation/user_presenter.dart';
+import 'package:untitled1/features/users/presentation/user_viewmodel.dart';
 
 class MockGetUsersUseCase extends Mock implements GetUsersUseCase {}
 
@@ -17,24 +18,34 @@ void main() {
 
     sut.getUsers();
 
-    await expectLater(sut.loading, emits(true));
+    await expectLater(sut.viewModelStream, emits(UserViewModelLoading()));
   });
 
-  test("getUsers SHOULD send users WHEN getUsersUseCase returns users ", () async {
+  test("getUsers SHOULD send users WHEN getUsersUseCase returns users ",
+      () async {
     final User actualUser = User("first name", "last name", "email", "avatar");
-    when(() => _getUsersUseCase()).thenAnswer((_) => Future.value([actualUser]));
+    final List<User> list = [actualUser];
+    when(() => _getUsersUseCase())
+        .thenAnswer((_) => Future.value(list));
 
     sut.getUsers();
 
-    await expectLater(sut.users, emits([actualUser]));
+    await expectLater(
+        sut.viewModelStream,
+        emitsInAnyOrder([
+          UserViewModelLoading(),
+          UserViewModelContent([actualUser])
+        ]));
   });
 
-  test("getUsers SHOULD send error WHEN getUsersUseCase throws UserException", () async {
+  test("getUsers SHOULD send error WHEN getUsersUseCase throws UserException",
+      () async {
     final UserException exception = UserException();
     when(() => _getUsersUseCase()).thenAnswer((_) => Future.error(exception));
 
     sut.getUsers();
 
-    await expectLater(sut.error, emits(exception));
+    await expectLater(sut.viewModelStream,
+        emitsInOrder([UserViewModelLoading(), UserViewModelError()]));
   });
 }
