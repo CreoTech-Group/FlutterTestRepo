@@ -13,11 +13,14 @@ class UserPresenter {
   UserPresenter(this._getUsersUseCase);
 
   void getUsers() async {
+    if (_viewModelSubject.isClosed) {
+      return;
+    }
     _viewModelSubject.add(UserViewModelLoading());
     try {
       final List<User> users = await _getUsersUseCase();
       _viewModelSubject.add(UserViewModelContent(users));
-    } on UserException catch(_) {
+    } on UserException catch (_) {
       _viewModelSubject.add(UserViewModelError());
     }
   }

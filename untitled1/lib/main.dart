@@ -1,8 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:untitled1/desktop_widget.dart';
 import 'package:untitled1/features/users/domain/usecase/get_users_usecase.dart';
 import 'package:untitled1/features/users/presentation/user_presenter.dart';
 import 'package:untitled1/features/users/presentation/users_page.dart';
+import 'package:untitled1/mobile_widget.dart';
+import 'package:untitled1/responsive_widget.dart';
 import 'di/injection_container.dart';
 import 'generated/codegen_loader.g.dart';
 import 'get_data.dart';
@@ -31,7 +34,10 @@ Future<void> main() async {
         locale: context.locale,
         routes: {
           '/info': (context) => const ItemsInfo(),
-          '/home': (context) => UsersPage(getIt()),
+          '/home': (context) => ResponsiveWidget(
+                mobileWidget: UsersPage(getIt()),
+                desktopWidget: const MobileWidget(),
+              ),
         },
       );
     }),
